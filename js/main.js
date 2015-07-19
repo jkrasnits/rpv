@@ -79,21 +79,13 @@ var linkClick = function(id) {
 };
 
 //meant to create proper link if not direct link
-var imgError = function(url){
-    var imgSrc = url;
+var imgError = function(elem){
+    console.log(elem);
 
     //Check image embed and implement
     //If it exists use that, if not call generate embed, assign returned value to embed attr of current imageid linkobj, implement embed
 
-    //checks if its imgur and not album
-    if (imgSrc.indexOf('imgur') !== -1 || imgSrc.indexOf('/a/') === -1) {
-        var idIndex = imgSrc.indexOf('.com/') +5;
-        var id = imgSrc.substring(idIndex);
-        //generateDirectURL(id) and add that as attr to object to reduce calls
-    }//checks if its imgur and album 
-    else if (imgSrc.indexOf('imgur') !== -1 || imgSrc.indexOf('/a/') !== -1){
-        //all the stuff to handle an album
-    }
+
     
 };
 
@@ -139,6 +131,11 @@ var imgurImgEmbed = function(link) {
     });
 
     console.log(directURL);
+
+    fullEmbed = "<img id='main_image' src='" + directUrl + "''>";
+
+    console.log(fullEmbed);
+    return fullEmbed;
     //return string for embed
 };
 
@@ -219,6 +216,7 @@ var gfycatEmbed = function(link) {
 
     fullEmbed = "<video src='" + directURL + "' height='100%' width='100%' loop autoplay></video>";
     console.log(fullEmbed);
+    return fullEmbed;
     //return string for embed
 };
 
@@ -243,6 +241,10 @@ var initialize = function () {
         }
     });
 
+    $("#main_image").error(function() {
+        imgError(this);
+    });
+
     $('#prevButton').on('click', function(event) {
         event.preventDefault();
         prevImage();
@@ -253,11 +255,9 @@ var initialize = function () {
         nextImage();
     });
 
-/*    */
-
 };
 
-var albumIndex = 0;
+/*var albumIndex = 0;
 var albumLinkArr=[];
 
 $('#album_prev').on('click', function(event) {
@@ -277,7 +277,7 @@ $('#album_next').on('click', function(event) {
         $('#main_image').attr('src', albumLinkArr[albumIndex]);
     }
 });
-
+*/
 
 
 
