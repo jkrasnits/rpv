@@ -80,7 +80,8 @@ var linkClick = function(id) {
 
 //meant to create proper link if not direct link
 var imgError = function(elem){
-    console.log(elem);
+    console.log(linkObjectArr[currentImageID]);
+
 
     //Check image embed and implement
     //If it exists use that, if not call generate embed, assign returned value to embed attr of current imageid linkobj, implement embed
@@ -132,7 +133,7 @@ var imgurImgEmbed = function(link) {
 
     console.log(directURL);
 
-    fullEmbed = "<img id='main_image' src='" + directUrl + "''>";
+    fullEmbed = "<img id='main_image' src='" + directURL + "'>";
 
     console.log(fullEmbed);
     return fullEmbed;
@@ -242,6 +243,7 @@ var initialize = function () {
     });
 
     $("#main_image").error(function() {
+        console.log(this)
         imgError(this);
     });
 
