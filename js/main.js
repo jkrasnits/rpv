@@ -27,7 +27,17 @@ var populateArray = function(numLinks) {
 //changes main image to linkID
 var displayLinkImage = function(linkID){
     //this has to be changed so that the proper embed code replaces the line below this
-    $( "#main_image" ).attr( "src", linkObjectArr[linkID].data.url );
+    if ('embedStr' in linkObjectArr[linkID].data) {
+        $( "#main_image").replaceWith(linkObjectArr[linkID].data.embedStr);
+        $("#main_image").on("error", function(){
+        console.log(this)
+        imgError(this);
+    });
+        console.log("Using the embed string")
+    } else{
+        $( "#main_image" ).attr( "src", linkObjectArr[linkID].data.url );
+    }
+    
     // maybe add spinner if loading?
     //include stuff to make link dark and what not
 };
@@ -80,7 +90,9 @@ var linkClick = function(id) {
 
 //meant to create proper link if not direct link
 var imgError = function(elem){
-    console.log(linkObjectArr[currentImageID]);
+    console.log(""+linkObjectArr[currentImageID]);
+    generateEmbed(linkObjectArr[currentImageID]);
+    displayLinkImage(currentImageID);
 
 
     //Check image embed and implement
@@ -94,8 +106,17 @@ var imgError = function(elem){
 //only call if not an album
 var generateEmbed = function(linkObj) {
     //maybe just return embed string/array
-    //var embed = big ass embed string
-    //link = linkObj.data.url or something
+    var embed;
+    link = linkObj.data.url;
+    console.log(link);
+
+    if ((link.indexOf("imgur.com") > -1) &&(link.indexOf("i.imgur.com") == -1) && (link.indexOf("/a/") == -1)) {
+        console.log("This is an non-album imgur link");
+        console.log(imgurImgEmbed(link));
+        embed = imgurImgEmbed(link);
+        console.log(linkObj);
+
+    }
 
     //if imgur img
         //embed = imgurImgEmbed(link)
@@ -109,6 +130,7 @@ var generateEmbed = function(linkObj) {
         //''
 
     //add properembed attr to linkObj
+    linkObj.data.embedStr = embed;
 
 };
 
@@ -134,8 +156,6 @@ var imgurImgEmbed = function(link) {
     console.log(directURL);
 
     fullEmbed = "<img id='main_image' src='" + directURL + "'>";
-
-    console.log(fullEmbed);
     return fullEmbed;
     //return string for embed
 };
@@ -242,7 +262,8 @@ var initialize = function () {
         }
     });
 
-    $("#main_image").error(function() {
+
+    $("#main_image").on("error", function(){
         console.log(this)
         imgError(this);
     });
